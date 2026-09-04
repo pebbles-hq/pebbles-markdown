@@ -1,0 +1,10 @@
+pebbles-markdown
+Copyright 2026 Reyco Seguma
+
+This product includes software developed by Reyco Seguma, licensed under the
+Apache License, Version 2.0 (see LICENSE).
+
+It builds on the Pebbles GUI framework (https://github.com/pebbles-hq/pebbles),
+also Copyright 2026 Reyco Seguma under the same license, and depends on
+pulldown-cmark (https://github.com/pulldown-cmark/pulldown-cmark) for GFM
+parsing, distributed under the MIT License.

@@ -2,13 +2,15 @@
 name = "pebbles-markdown"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.85"
-license = "MIT OR Apache-2.0"
+rust-version = "1.90"
+license = "Apache-2.0"
 authors = ["Reyco Seguma"]
 repository = "https://github.com/pebbles-hq/pebbles-markdown"
+homepage = "https://github.com/pebbles-hq/pebbles-markdown"
 description = "An Obsidian-style Markdown reader + editor widget for the Pebbles GUI framework."
 keywords = ["gui", "markdown", "pebbles", "widget", "obsidian"]
 categories = ["gui"]
+readme = "README.md"
 
 [features]
 default = []

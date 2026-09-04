@@ -91,6 +91,9 @@ This crate is the template. A Pebbles widget package:
 
 ## License
 
-MIT OR Apache-2.0.
+Licensed under the **Apache License, Version 2.0** — see [LICENSE](LICENSE) and
+[NOTICE](NOTICE). The same license as the Pebbles framework.
+
+Copyright © 2026 Reyco Seguma.
 
 [`pulldown-cmark`]: https://github.com/pulldown-cmark/pulldown-cmark

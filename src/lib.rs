@@ -42,6 +42,13 @@ use pebbles_widgets::{
 use pebbles_core::widget::{AnyWidget, IntoWidget};
 use pebbles_core::{Signal, children, component_props};
 
+/// A link-click handler (open a browser, route internally, …) — the reader's
+/// `on_link`. Aliased (like the framework's `Callback`) so the callback fields
+/// stay readable and clippy-clean.
+type LinkFn = Rc<dyn Fn(&str)>;
+/// A task-checkbox toggle handler: `(document-order ordinal, now_checked)`.
+type TaskFn = Rc<dyn Fn(usize, bool)>;
+
 // ---------------------------------------------------------------------------
 // Style — the theming surface
 // ---------------------------------------------------------------------------
@@ -168,6 +175,10 @@ enum Block {
     Table { header: Vec<Vec<Inline>>, rows: Vec<Vec<Vec<Inline>>> },
 }
 
+/// A table accumulated during parsing: `(header cells, body rows)`, each cell a
+/// run of inlines. Aliased to keep `parse_blocks`' local readable + clippy-clean.
+type TableAcc = (Vec<Vec<Inline>>, Vec<Vec<Vec<Inline>>>);
+
 /// Content-keyed parse cache for FIXED sources (8-entry MRU): re-rendering a
 /// static document re-uses the parsed blocks; a different string parses fresh.
 fn parse_cached(s: &str) -> Rc<Vec<Block>> {
@@ -222,7 +233,7 @@ fn parse_blocks(src: &str) -> Vec<Block> {
     // Image capture (alt text accumulates between Start/End).
     let mut image: Option<(String, String)> = None;
     // Tables.
-    let mut table: Option<(Vec<Vec<Inline>>, Vec<Vec<Vec<Inline>>>)> = None;
+    let mut table: Option<TableAcc> = None;
     let mut table_row: Vec<Vec<Inline>> = Vec::new();
     let mut in_head = false;
 
@@ -484,8 +495,8 @@ enum Source {
 pub struct Markdown {
     source: Source,
     style: Option<MarkdownStyle>,
-    on_link: Option<Rc<dyn Fn(&str)>>,
-    on_task: Option<Rc<dyn Fn(usize, bool)>>,
+    on_link: Option<LinkFn>,
+    on_task: Option<TaskFn>,
     virtualized: bool,
 }
 
@@ -537,8 +548,8 @@ impl Markdown {
 struct MdProps {
     source: Source,
     style: Option<MarkdownStyle>,
-    on_link: Option<Rc<dyn Fn(&str)>>,
-    on_task: Option<Rc<dyn Fn(usize, bool)>>,
+    on_link: Option<LinkFn>,
+    on_task: Option<TaskFn>,
     virtualized: bool,
 }
 
@@ -562,8 +573,8 @@ impl IntoWidget for Markdown {
 #[derive(Clone)]
 struct Cx {
     style: Rc<MarkdownStyle>,
-    on_link: Option<Rc<dyn Fn(&str)>>,
-    on_task: Option<Rc<dyn Fn(usize, bool)>>,
+    on_link: Option<LinkFn>,
+    on_task: Option<TaskFn>,
     bound: Option<Signal<String>>,
     /// Text color override (block quotes mute their body).
     color: Color,
@@ -1135,7 +1146,7 @@ pub struct MarkdownEditor {
     source: Signal<String>,
     mode: Option<Signal<MarkdownMode>>,
     style: Option<MarkdownStyle>,
-    on_link: Option<Rc<dyn Fn(&str)>>,
+    on_link: Option<LinkFn>,
     lines: u32,
 }
 
@@ -1173,7 +1184,7 @@ struct EdProps {
     source: Signal<String>,
     mode: Option<Signal<MarkdownMode>>,
     style: Option<MarkdownStyle>,
-    on_link: Option<Rc<dyn Fn(&str)>>,
+    on_link: Option<LinkFn>,
     lines: u32,
 }
 

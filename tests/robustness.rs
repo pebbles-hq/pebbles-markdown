@@ -74,7 +74,7 @@ fn malformed_markdown_renders_without_crashing() {
         assert!(
             ui.element_count() > 0,
             "fixture #{i} produced a tree ({:?}…)",
-            &doc.chars().take(24).collect::<String>()
+            doc.chars().take(24).collect::<String>()
         );
     }
 }
