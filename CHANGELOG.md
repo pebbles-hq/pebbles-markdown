@@ -25,3 +25,8 @@ only on Pebbles' public API.
   raw bytes. Covered by `tests/robustness.rs`.
 - Tests carried over intact: parse/highlight units, task-toggle + live re-render,
   the multibyte interaction storm, and the huge-document performance tripwires.
+- **Showcase sample** (`examples/reader.rs`): reader + editor with View / Edit /
+  Split modes, themeable style variants (default / serif / compact with custom
+  syntax palettes), and the virtualized reader on a deterministic multi-megabyte
+  stress document — the widget's own standalone demo (the gallery no longer
+  ships a Markdown screen).

@@ -24,7 +24,9 @@ fn editor(src: Signal<String>) -> impl IntoWidget {
 }
 ```
 
-Run the demo:
+Run the showcase sample — reader + editor with View / Edit / Split modes,
+themeable style variants (default / serif / compact), and the virtualized reader
+on a deterministic multi-megabyte stress document:
 
 ```sh
 cargo run --example reader
