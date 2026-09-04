@@ -128,9 +128,9 @@ fn app() -> impl IntoWidget {
     // stress document — the virtualized reader is its own scroll view, so it
     // gets a bounded (Expanded) slot; the editor auto-grows inside a scroll box.
     let body: AnyWidget = if huge.get() {
-        Expanded::new(markdown(source.get()).virtualized().style(style_of())).into_widget()
+        expanded(markdown(source.get()).virtualized().style(style_of())).into_widget()
     } else {
-        Expanded::new(scroll_view(
+        expanded(scroll_view(
             markdown_editor(source).mode_signal(mode).style(style_of()).lines(18),
         ))
         .into_widget()
@@ -141,7 +141,7 @@ fn app() -> impl IntoWidget {
             // Row 1: title + mode toggle.
             row(children![
                 text("pebbles-markdown").size(18.0).semibold(),
-                Expanded::new(container()),
+                expanded(container()),
                 mode_seg("View", MarkdownMode::Read),
                 gap_w(6.0),
                 mode_seg("Edit", MarkdownMode::Edit),
@@ -159,7 +159,7 @@ fn app() -> impl IntoWidget {
                 look_seg("Serif", Look::Serif),
                 gap_w(6.0),
                 look_seg("Compact", Look::Compact),
-                Expanded::new(container()),
+                expanded(container()),
                 button(if huge.get() { "Huge demo (virtualized) ✓" } else { "Load huge demo" })
                     .size(ButtonSize::Sm)
                     .variant(if huge.get() { ButtonVariant::Primary } else { ButtonVariant::Outline })
@@ -175,7 +175,7 @@ fn app() -> impl IntoWidget {
             ])
             .cross_axis_alignment(CrossAxisAlignment::Center),
             gap_h(14.0),
-            Expanded::new(
+            expanded(
                 container()
                     .decoration(
                         BoxDecoration::new()

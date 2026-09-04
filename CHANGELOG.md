@@ -25,6 +25,10 @@ only on Pebbles' public API.
   raw bytes. Covered by `tests/robustness.rs`.
 - Tests carried over intact: parse/highlight units, task-toggle + live re-render,
   the multibyte interaction storm, and the huge-document performance tripwires.
+- Constructors follow the D10 lowercase-function convention throughout (both the
+  library and the example): `container()` / `expanded()` / `padding()` /
+  `gesture_detector()`, never `Type::new()` — the reference package models the
+  one call-site convention cleanly.
 - **Showcase sample** (`examples/reader.rs`): reader + editor with View / Edit /
   Split modes, themeable style variants (default / serif / compact with custom
   syntax palettes), and the virtualized reader on a deterministic multi-megabyte

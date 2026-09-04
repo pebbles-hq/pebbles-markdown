@@ -36,7 +36,7 @@ use pebbles_render::{Border, BorderRadius, BoxDecoration, Cursor, lucide};
 
 use pebbles_widgets::theme::{mix, theme};
 use pebbles_widgets::{
-    Container, Expanded, GestureDetector, Padding, TextSpan, column, gap_w, row, span, text,
+    TextSpan, column, container, expanded, gap_w, gesture_detector, padding, row, span, text,
     text_rich, wrap,
 };
 use pebbles_core::widget::{AnyWidget, IntoWidget};
@@ -616,7 +616,7 @@ fn render_markdown(p: &MdProps) -> AnyWidget {
         return pebbles_widgets::ListView::builder_auto(count, move |i| {
             let inner = render_block(&blocks[i], &item_cx);
             if i + 1 < count {
-                Padding::new(EdgeInsets::only(0.0, 0.0, 0.0, gap), inner).into_widget()
+                padding(EdgeInsets::only(0.0, 0.0, 0.0, gap), inner).into_widget()
             } else {
                 inner
             }
@@ -917,7 +917,7 @@ fn render_block(b: &Block, cx: &Cx) -> AnyWidget {
                     .soft_wrap(false)
                     .into_widget(),
             );
-            Container::new()
+            container()
                 .decoration(BoxDecoration::new().color(s.code_bg).radius(BorderRadius::all(6.0)))
                 .padding(EdgeInsets::all(10.0))
                 .child(
@@ -931,9 +931,9 @@ fn render_block(b: &Block, cx: &Cx) -> AnyWidget {
         Block::Quote(body) => {
             let quoted = Cx { color: s.quote_color, ..cx.clone() };
             row(children![
-                Container::new().width(3.0).color(s.quote_bar),
+                container().width(3.0).color(s.quote_bar),
                 gap_w(10.0),
-                Expanded::new(render_blocks(body, &quoted)),
+                expanded(render_blocks(body, &quoted)),
             ])
             .main_axis_size(MainAxisSize::Min)
             .into_widget()
@@ -944,7 +944,7 @@ fn render_block(b: &Block, cx: &Cx) -> AnyWidget {
                 let marker: AnyWidget = match item.task {
                     Some((checked, ordinal)) => {
                         let (bound, on_task) = (cx.bound, cx.on_task.clone());
-                        GestureDetector::new(
+                        gesture_detector(
                             pebbles_widgets::components::icon(if checked {
                                 lucide::SQUARE_CHECK
                             } else {
@@ -975,15 +975,15 @@ fn render_block(b: &Block, cx: &Cx) -> AnyWidget {
                 };
                 rows.push(
                     row(children![
-                        Container::new().width(22.0).child(marker),
-                        Expanded::new(render_blocks(&item.blocks, cx)),
+                        container().width(22.0).child(marker),
+                        expanded(render_blocks(&item.blocks, cx)),
                     ])
                     .cross_axis_alignment(CrossAxisAlignment::Start)
                     .main_axis_size(MainAxisSize::Min)
                     .into_widget(),
                 );
             }
-            Padding::new(
+            padding(
                 EdgeInsets::only(8.0, 0.0, 0.0, 0.0),
                 column(rows)
                     .cross_axis_alignment(CrossAxisAlignment::Stretch)
@@ -992,10 +992,10 @@ fn render_block(b: &Block, cx: &Cx) -> AnyWidget {
             )
             .into_widget()
         }
-        Block::Rule => Container::new().height(1.0).color(s.rule_color).into_widget(),
+        Block::Rule => container().height(1.0).color(s.rule_color).into_widget(),
         Block::Table { header, rows } => {
             let cell = |inlines: &Vec<Inline>, bold: bool| -> AnyWidget {
-                Padding::new(
+                padding(
                     EdgeInsets::symmetric(8.0, 5.0),
                     inline_flow(inlines, cx, cx.style.body_size * 0.95, cx.color, bold),
                 )
@@ -1003,24 +1003,24 @@ fn render_block(b: &Block, cx: &Cx) -> AnyWidget {
             };
             let mut lines: Vec<AnyWidget> = Vec::new();
             let head_cells: Vec<AnyWidget> =
-                header.iter().map(|c| Expanded::new(cell(c, true)).into_widget()).collect();
+                header.iter().map(|c| expanded(cell(c, true)).into_widget()).collect();
             lines.push(
-                Container::new()
+                container()
                     .color(mix(theme().colors.background, theme().colors.foreground, 0.04))
                     .child(row(head_cells).main_axis_size(MainAxisSize::Min))
                     .into_widget(),
             );
             for r in rows {
                 let cells: Vec<AnyWidget> =
-                    r.iter().map(|c| Expanded::new(cell(c, false)).into_widget()).collect();
+                    r.iter().map(|c| expanded(cell(c, false)).into_widget()).collect();
                 lines.push(
-                    Container::new()
+                    container()
                         .decoration(BoxDecoration::new().border(Border::new(s.table_border, 0.5)))
                         .child(row(cells).main_axis_size(MainAxisSize::Min))
                         .into_widget(),
                 );
             }
-            Container::new()
+            container()
                 .decoration(
                     BoxDecoration::new()
                         .border(Border::new(s.table_border, 1.0))
@@ -1261,9 +1261,9 @@ fn render_editor(p: &EdProps) -> AnyWidget {
         MarkdownMode::Edit => editor(),
         MarkdownMode::Read => preview(source, true),
         MarkdownMode::Split => row(children![
-            Expanded::new(editor()),
+            expanded(editor()),
             gap_w(12.0),
-            Expanded::new(preview(preview_src, false)),
+            expanded(preview(preview_src, false)),
         ])
         .cross_axis_alignment(CrossAxisAlignment::Start)
         .main_axis_size(MainAxisSize::Min)
