@@ -7,8 +7,8 @@ license = "Apache-2.0"
 authors = ["Reyco Seguma"]
 repository = "https://github.com/pebbles-hq/pebbles-markdown"
 homepage = "https://github.com/pebbles-hq/pebbles-markdown"
-description = "An Obsidian-style Markdown reader + editor widget for the Pebbles GUI framework."
-keywords = ["gui", "markdown", "pebbles", "widget", "obsidian"]
+description = "Live Markdown (GFM) reader + editor widget for the Pebbles GUI framework — renders Markdown to native, themed widgets and rewrites the bound source on interaction. Part of the Pebbles ecosystem."
+keywords = ["gui", "markdown", "pebbles", "widget", "gfm"]
 categories = ["gui"]
 readme = "README.md"
 

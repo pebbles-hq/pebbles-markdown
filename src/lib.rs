@@ -1,6 +1,6 @@
 //! # pebbles-markdown
 //!
-//! An Obsidian-style Markdown reader + editor **widget for
+//! A live Markdown reader + editor **widget for
 //! [Pebbles](https://github.com/pebbles-hq/pebbles)**, maintained as a separate
 //! package. It is a worked example of a third-party Pebbles widget crate: it
 //! depends only on Pebbles' *public* API (`pebbles-widgets` for the catalog +
@@ -13,7 +13,7 @@
 //! strong / strikethrough, inline code, fenced code blocks (JetBrains Mono),
 //! links (clickable — wire [`Markdown::on_link`]), block quotes (nested), ordered +
 //! unordered lists (nested), **task lists with live checkboxes** (toggling rewrites
-//! the bound source, Obsidian-style), tables, horizontal rules, and images (rendered
+//! the bound source), tables, horizontal rules, and images (rendered
 //! with the `image-view` feature, alt-text otherwise).
 //!
 //! **Editing** ([`markdown_editor`]): a `Signal<String>`-bound editor with three
@@ -69,7 +69,7 @@ pub struct MarkdownStyle {
     pub code_color: Color,
     /// The monospace family for code ("JetBrains Mono" is bundled).
     pub code_family: String,
-    /// Syntax-highlight palette for fenced code blocks (Obsidian-style). Every
+    /// Syntax-highlight palette for fenced code blocks. Every
     /// color is themeable; the default scheme reads on both light and dark code
     /// backgrounds.
     pub syntax: SyntaxColors,
@@ -432,7 +432,7 @@ fn parse_blocks(src: &str) -> Vec<Block> {
 }
 
 // ---------------------------------------------------------------------------
-// Task toggling in the SOURCE (the Obsidian behavior)
+// Task toggling in the SOURCE
 // ---------------------------------------------------------------------------
 
 /// Flip the `ordinal`-th task checkbox (document order) in `source`, returning
@@ -680,7 +680,7 @@ fn render_blocks(blocks: &[Block], cx: &Cx) -> AnyWidget {
 
 // ---------------------------------------------------------------------------
 // Syntax highlighting — a small, dependency-free lexer good enough to color the
-// common languages (C-family + a few script styles), Obsidian-style. Not a full
+// common languages (C-family + a few script styles). Not a full
 // grammar; it tokenizes comments, strings, numbers, keywords, identifiers and
 // punctuation, and colors them from the themeable `SyntaxColors`.
 // ---------------------------------------------------------------------------
@@ -955,7 +955,7 @@ fn render_block(b: &Block, cx: &Cx) -> AnyWidget {
                         )
                         .cursor(Cursor::Pointer)
                         .on_tap(move || {
-                            // Rewrite the bound source (Obsidian behavior), then report.
+                            // Rewrite the bound source, then report.
                             if let Some(sig) = bound
                                 && let Some(new) = toggle_task(&sig.peek(), ordinal)
                             {

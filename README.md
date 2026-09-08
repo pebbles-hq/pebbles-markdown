@@ -1,6 +1,6 @@
 # pebbles-markdown
 
-An **Obsidian-style Markdown reader + editor** widget for the
+A live **Markdown reader + editor** widget for the
 [Pebbles](https://github.com/pebbles-hq/pebbles) GUI framework, maintained as a
 **separate package**.
 
@@ -37,7 +37,7 @@ cargo run --example reader
 - **Reading** (`markdown`): full GFM via [`pulldown-cmark`] — headings, emphasis /
   strong / strikethrough, inline + fenced code (syntax-highlighted, JetBrains
   Mono), clickable links, nested quotes and lists, **task lists with live
-  checkboxes** that rewrite the bound source (Obsidian-style), tables, rules, and
+  checkboxes** that rewrite the bound source, tables, rules, and
   images (with the `image-view` feature; alt text otherwise).
 - **Editing** (`markdown_editor`): a `Signal<String>`-bound editor with Edit /
   Split / Read modes, driven by a mode signal you own — no built-in chrome.

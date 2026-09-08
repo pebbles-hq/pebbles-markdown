@@ -6,7 +6,7 @@ follow [SemVer](https://semver.org).
 
 ## [0.1.0]
 
-Initial release as a standalone package. The Obsidian-style Markdown reader +
+Initial release as a standalone package. The Markdown reader +
 editor was extracted from `pebbles-widgets` (where it had lived behind a
 `markdown` feature) into its own crate — the reference example of a third-party
 Pebbles widget package. No behavior change from the in-tree version; it depends

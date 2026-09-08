@@ -9,7 +9,7 @@ use pebbles_markdown::{MarkdownMode, markdown, markdown_editor, toggle_task};
 use pebbles_widgets::View;
 
 // ---------------------------------------------------------------------------
-// toggle_task — the Obsidian source rewrite
+// toggle_task — the source rewrite
 // ---------------------------------------------------------------------------
 
 #[test]

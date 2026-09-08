@@ -8,7 +8,7 @@ use pebbles_render::TextEnv;
 use pebbles_markdown::{MarkdownMode, markdown_editor};
 use pebbles_widgets::View;
 
-const DEMO: &str = "# Pebbles Markdown\n\nA GFM document rendered **live** \u{2014} edit the source on the left and watch it\nupdate. *Italic*, **bold**, ***both***, ~~strikethrough~~ and `inline code`\nall flow inside wrapped paragraphs, and [links are clickable](https://example.com).\n\n## Task list \u{2014} click the checkboxes\n\n- [x] Parse GFM (tables, tasks, strikethrough)\n- [ ] Toggle me \u{2014} the SOURCE rewrites, Obsidian-style\n- [ ] Ship an IDE on Pebbles\n\n> Block quotes carry whole blocks \u{2014}\n> including **formatting** and nested content.\n\n```rust\nfn main() {\n    println!(\"JetBrains Mono, bundled\");\n}\n```\n";
+const DEMO: &str = "# Pebbles Markdown\n\nA GFM document rendered **live** \u{2014} edit the source on the left and watch it\nupdate. *Italic*, **bold**, ***both***, ~~strikethrough~~ and `inline code`\nall flow inside wrapped paragraphs, and [links are clickable](https://example.com).\n\n## Task list \u{2014} click the checkboxes\n\n- [x] Parse GFM (tables, tasks, strikethrough)\n- [ ] Toggle me \u{2014} the SOURCE rewrites\n- [ ] Ship an IDE on Pebbles\n\n> Block quotes carry whole blocks \u{2014}\n> including **formatting** and nested content.\n\n```rust\nfn main() {\n    println!(\"JetBrains Mono, bundled\");\n}\n```\n";
 
 thread_local! {
     static MODE: std::cell::RefCell<Option<pebbles_core::Signal<MarkdownMode>>> =

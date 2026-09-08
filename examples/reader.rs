@@ -24,7 +24,7 @@ the reference example of a third-party widget crate.
 ## Task list — click the checkboxes
 
 - [x] Parse GFM — tables, tasks, ~~strikethrough~~
-- [ ] Toggle me — the SOURCE rewrites, Obsidian-style
+- [ ] Toggle me — the SOURCE rewrites
 - [ ] Build your own widget package
 
 > Block quotes carry whole blocks — including **formatting**, `code`, and

@@ -1,4 +1,4 @@
-//! The reader must survive ANY input — the Obsidian contract: a malformed or
+//! The reader must survive ANY input — the reader's contract: a malformed or
 //! unusual document renders (broken parts fall back to plain text) instead of
 //! crashing or freezing. Each fixture is parsed AND rendered to a real scene; a
 //! panic or an infinite loop fails the test rather than the app.
