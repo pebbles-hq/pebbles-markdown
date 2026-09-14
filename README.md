@@ -9,6 +9,8 @@ it depends only on Pebbles' *public* API and composes the built-in catalog into
 new widgets — the same thing any ecosystem package does. If markdown can live
 outside the framework as a normal crate, so can your components.
 
+![pebbles-markdown — reader + editor in Split mode](docs/demo.png)
+
 ```rust
 use pebbles::prelude::*;
 use pebbles_markdown::{markdown, markdown_editor, MarkdownMode};
@@ -24,29 +26,61 @@ fn editor(src: Signal<String>) -> impl IntoWidget {
 }
 ```
 
-Run the showcase sample — reader + editor with View / Edit / Split modes,
-themeable style variants (default / serif / compact), and the virtualized reader
-on a deterministic multi-megabyte stress document:
+Run the showcase — reader + editor with View / Edit / Split modes, themeable
+style variants (default / serif / compact), selectable + copyable text, keyboard
+link traversal, and the virtualized reader on a deterministic multi-megabyte
+stress document:
 
 ```sh
-cargo run --example reader
+cargo run -p demo
+# headless screenshot (no display):
+SHOT=1080:800:/tmp/markdown.rgba cargo run -p demo
 ```
 
 ## What it does
 
 - **Reading** (`markdown`): full GFM via [`pulldown-cmark`] — headings, emphasis /
-  strong / strikethrough, inline + fenced code (syntax-highlighted, JetBrains
-  Mono), clickable links, nested quotes and lists, **task lists with live
-  checkboxes** that rewrite the bound source, tables, rules, and
-  images (with the `image-view` feature; alt text otherwise).
+  strong / strikethrough, inline + fenced code, clickable links, nested quotes and
+  lists, **task lists with live checkboxes** that rewrite the bound source, tables
+  (with column alignment + horizontal scroll), rules, footnotes, and images
+  (sized + captioned; with the `image-view` feature, alt text otherwise).
+- **Advanced markup**: 2-D display math (`$$…$$`) + inline TeX→Unicode, callouts
+  (`> [!NOTE]`), `:::` containers, definition lists, `==highlight==`,
+  sub/superscript, emoji, smart punctuation, heading slugs + `[toc]`, and
+  collapsible `<details>`.
+- **Obsidian PKM**: wikilinks + aliases, image/note embeds with resolver
+  transclusion + hover preview, `#tags`, `%% comments %%`, a front-matter
+  properties panel, and a host-supplied backlinks section.
+- **Code blocks**: per-language syntax highlighting (JetBrains Mono, themeable
+  palette), a language label, a copy button, opt-in line numbers, and highlighted
+  lines (`{2,4-6}`).
 - **Editing** (`markdown_editor`): a `Signal<String>`-bound editor with Edit /
-  Split / Read modes, driven by a mode signal you own — no built-in chrome.
+  Split / Read modes, driven by a mode signal you own — no built-in chrome — plus
+  reusable source-transform helpers (`toggle_task`, `wrap_selection`,
+  `toggle_line_prefix`).
+- **Interaction & a11y**: clickable + hover-reported links, cross-block text
+  **selection + copy** (`selectable`), **keyboard link traversal**
+  (`keyboard_links`), find-in-document highlighting, fold-on-click headings, and
+  per-block screen-reader semantics.
 - **Theming**: everything visual lives in `MarkdownStyle`, defaulting from the
   live Pebbles theme (follows light/dark).
+- **Security**: raw HTML is inert (rendered, never executed) and links are
+  scheme-allowlisted (`javascript:` / `data:` … render as text).
+- **Extensibility**: a fenced-block handler (e.g. map ```` ```mermaid ```` to a
+  diagram), a custom per-block renderer, and HTML export (`to_html`).
 - **Robust by contract**: any input renders — malformed or unusual constructs
-  fall back to plain text instead of crashing (see `tests/robustness.rs`).
+  fall back to plain text instead of crashing (see `tests/robustness.rs`,
+  `tests/storm.rs`).
 - **Virtualized**: `markdown(..).virtualized()` renders only the blocks in view,
   so a multi-megabyte document stays a few hundred widgets.
+
+## Project layout
+
+The crate is organized **by domain** — a thin `lib.rs` crate root over one module
+per concern (`model` · `parse` · `highlight` · `style` · `edit` · `widget` ·
+`render` · `editor`, plus `advanced` / `math` / `html` helpers). See
+[ARCHITECTURE.md](ARCHITECTURE.md) for the module map and layering rules, and
+[CONTRIBUTING.md](CONTRIBUTING.md) to get set up and land a change.
 
 ## Depending on Pebbles
 

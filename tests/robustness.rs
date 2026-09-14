@@ -7,8 +7,8 @@ use std::cell::RefCell;
 
 use pebbles_core::{IntoWidget, Ui, component};
 use pebbles_foundation::{Size, palette};
-use pebbles_render::TextEnv;
 use pebbles_markdown::markdown;
+use pebbles_render::TextEnv;
 use pebbles_widgets::View;
 
 /// Documents that used to freeze or panic, plus a spread of malformed GFM. The
@@ -35,8 +35,8 @@ const FIXTURES: &[&str] = &[
     "###### h6\n####### not a heading (7 hashes) café",
     "a lone backslash at EOL \\\nand a tab\there\tand emoji 🚀",
     "<div>raw html</div> and <not-a-tag café>",
-    "```\n\n\n```",                                     // empty code block
-    "",                                                 // empty document
+    "```\n\n\n```", // empty code block
+    "",             // empty document
     "\u{0}\u{1}\u{2} control chars and \u{200B}zero-width",
     "![img](nonexistent.png) ![](  ) ![alt only](", // broken images
 ];

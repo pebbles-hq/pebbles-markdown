@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    name: fmt · clippy · test · doc
+    runs-on: ubuntu-latest
+    steps:
+      # The crate depends on the framework by PATH (`../pebbles/crates/*`), so the
+      # two repos must sit side by side — check this repo into `pebbles-markdown/`
+      # and clone `pebbles` next to it.
+      - uses: actions/checkout@v4
+        with:
+          path: pebbles-markdown
+
+      - name: Clone the Pebbles framework (sibling)
+        run: git clone --depth 1 https://github.com/pebbles-hq/pebbles pebbles
+
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo + target
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: pebbles-markdown
+
+      - name: Format
+        working-directory: pebbles-markdown
+        run: cargo fmt --all --check
+
+      - name: Clippy (all targets + features, warnings = errors)
+        working-directory: pebbles-markdown
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+      - name: Test
+        # The rendering/robustness/storm suites run headless on CPU. The SHOT=
+        # screenshot path needs a GPU and isn't exercised here.
+        working-directory: pebbles-markdown
+        run: cargo test --workspace --all-features
+
+      - name: Docs
+        working-directory: pebbles-markdown
+        run: cargo doc --no-deps --workspace --all-features
+        env:
+          RUSTDOCFLAGS: "-D warnings"

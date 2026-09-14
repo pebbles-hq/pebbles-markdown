@@ -4,8 +4,8 @@
 
 use pebbles_core::{IntoWidget, KeyInput, Motion, Ui, component, create_signal};
 use pebbles_foundation::{Offset, Size, palette};
-use pebbles_render::TextEnv;
 use pebbles_markdown::{MarkdownMode, markdown_editor};
+use pebbles_render::TextEnv;
 use pebbles_widgets::View;
 
 const DEMO: &str = "# Pebbles Markdown\n\nA GFM document rendered **live** \u{2014} edit the source on the left and watch it\nupdate. *Italic*, **bold**, ***both***, ~~strikethrough~~ and `inline code`\nall flow inside wrapped paragraphs, and [links are clickable](https://example.com).\n\n## Task list \u{2014} click the checkboxes\n\n- [x] Parse GFM (tables, tasks, strikethrough)\n- [ ] Toggle me \u{2014} the SOURCE rewrites\n- [ ] Ship an IDE on Pebbles\n\n> Block quotes carry whole blocks \u{2014}\n> including **formatting** and nested content.\n\n```rust\nfn main() {\n    println!(\"JetBrains Mono, bundled\");\n}\n```\n";
@@ -69,11 +69,20 @@ fn interaction_storm_over_multibyte_markdown() {
                 }
                 if step % 7 == 0 {
                     // edit at the caret: motions + deletions + typing
-                    ui.dispatch_key(KeyInput::Move { motion: Motion::WordLeft, extend: true });
-                    ui.dispatch_key(KeyInput::Move { motion: Motion::Right, extend: false });
+                    ui.dispatch_key(KeyInput::Move {
+                        motion: Motion::WordLeft,
+                        extend: true,
+                    });
+                    ui.dispatch_key(KeyInput::Move {
+                        motion: Motion::Right,
+                        extend: false,
+                    });
                     ui.dispatch_key(KeyInput::Backspace);
                     ui.dispatch_key(KeyInput::Insert("é\u{2014}x".to_string()));
-                    ui.dispatch_key(KeyInput::Move { motion: Motion::LineEnd, extend: true });
+                    ui.dispatch_key(KeyInput::Move {
+                        motion: Motion::LineEnd,
+                        extend: true,
+                    });
                     ui.dispatch_key(KeyInput::Delete);
                 }
                 frame(&mut ui, &mut env);

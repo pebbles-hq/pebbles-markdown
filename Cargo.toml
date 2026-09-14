@@ -1,3 +1,6 @@
+[workspace]
+members = [".", "examples/demo"]
+
 [package]
 name = "pebbles-markdown"
 version = "0.1.0"
@@ -32,12 +35,18 @@ pebbles-core = { path = "../pebbles/crates/pebbles-core" }
 pebbles-render = { path = "../pebbles/crates/pebbles-render" }
 pebbles-foundation = { path = "../pebbles/crates/pebbles-foundation" }
 pebbles-widgets = { path = "../pebbles/crates/pebbles-widgets" }
-pulldown-cmark = { version = "0.13", default-features = false }
+pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
 
-[dev-dependencies]
-# The umbrella crate gives the example the prelude + the `App` runner.
-pebbles = { path = "../pebbles/crates/pebbles" }
+# The runnable showcase lives in its own workspace member (`examples/demo`) so it
+# can pull the `pebbles` umbrella + the headless-capture stack without adding them
+# to the library's dependency graph. Run it with `cargo run -p demo`.
 
-[[example]]
-name = "reader"
-path = "examples/reader.rs"
+# Dev builds keep THIS crate at opt-level 0 (fast incremental compiles) but
+# optimize every dependency — the framework, wgpu/vello (GPU), parley/swash (text
+# shaping + rasterization) — at opt-level 2. Without this, `cargo run -p demo`
+# and `cargo test` shape/paint text unoptimized and lag badly on real documents.
+[profile.dev]
+opt-level = 0
+
+[profile.dev.package."*"]
+opt-level = 2
