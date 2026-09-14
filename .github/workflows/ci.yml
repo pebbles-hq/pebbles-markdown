@@ -24,6 +24,12 @@ jobs:
       - name: Clone the Pebbles framework (sibling)
         run: git clone --depth 1 https://github.com/pebbles-hq/pebbles pebbles
 
+      # The `image-view` feature (exercised by `--all-features`) pulls
+      # fontconfig-sys for system font discovery, whose build script needs the
+      # fontconfig dev headers.
+      - name: System deps (fontconfig, for the image-view feature)
+        run: sudo apt-get update && sudo apt-get install -y libfontconfig1-dev
+
       - name: Install Rust (stable)
         uses: dtolnay/rust-toolchain@stable
         with:
