@@ -27,6 +27,10 @@
 //! tables. Defaults derive from the live [`theme()`](fn@pebbles_widgets::theme), so it
 //! follows light/dark automatically; pass your own via [`Markdown::style`].
 
+// This crate parses UNTRUSTED input; nothing here needs `unsafe`, so forbid it
+// outright for a compiler-enforced memory-safety guarantee.
+#![forbid(unsafe_code)]
+
 use std::rc::Rc;
 
 /// A link-click handler (open a browser, route internally, …) — the reader's

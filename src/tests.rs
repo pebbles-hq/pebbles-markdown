@@ -476,6 +476,20 @@ fn link_scheme_guard() {
     assert!(!is_safe_link("data:text/html,<x>"));
     assert!(!is_safe_link("vbscript:x"));
     assert!(!is_safe_link("file:///etc/passwd"));
+    // Control/whitespace smuggling: browsers strip these before resolving the
+    // scheme, so a disallowed scheme must not sneak past the allowlist by
+    // hiding a newline/tab/space/other control char inside it.
+    assert!(!is_safe_link("java\nscript:alert(1)"));
+    assert!(!is_safe_link("ja\tvascript:alert(1)"));
+    assert!(!is_safe_link("j a v a s c r i p t:alert(1)"));
+    assert!(!is_safe_link("java\rscript:alert(1)"));
+    assert!(!is_safe_link("javas\u{0}cript:alert(1)"));
+    assert!(!is_safe_link(" javascript:alert(1)")); // leading whitespace
+    assert!(!is_safe_link("da\tta:text/html,<x>"));
+    assert!(!is_safe_link("vb\nscript:x"));
+    // Clean allowlisted schemes still resolve after normalization.
+    assert!(is_safe_link("https://x.com"));
+    assert!(is_safe_link("mailto:a@b.com"));
 }
 
 // §15: HTML export renders the CommonMark/GFM core, strips front matter, and

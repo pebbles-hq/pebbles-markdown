@@ -5,7 +5,7 @@
 use std::rc::Rc;
 
 use pebbles_foundation::{Color, CrossAxisAlignment, EdgeInsets, MainAxisSize, TextAlign};
-use pebbles_render::{Cursor, lucide};
+use pebbles_render::{Cursor, tabler};
 
 use pebbles_core::widget::{AnyWidget, IntoWidget};
 use pebbles_core::{Signal, children, component_props};
@@ -416,9 +416,9 @@ pub(crate) fn render_foldable_heading(
     let s = &cx.style;
     let size = s.body_size * s.heading_scale[(level as usize - 1).min(5)];
     let chevron = if is_collapsed {
-        lucide::CHEVRON_RIGHT
+        tabler::CHEVRON_RIGHT
     } else {
-        lucide::CHEVRON_DOWN
+        tabler::CHEVRON_DOWN
     };
     let slug = slug.to_string();
     let label = format!(

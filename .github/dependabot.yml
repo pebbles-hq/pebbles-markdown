@@ -1,0 +1,20 @@
+# Dependency update PRs. Dependabot proposes the upgrades; the Security workflow
+# (cargo-audit + cargo-deny) is what actually gates a vulnerable graph.
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      dev-dependencies:
+        dependency-type: development
+
+  # Keep the SHA-pinned actions current — a pin is only safe if it is maintained.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday

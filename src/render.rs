@@ -6,7 +6,7 @@
 use pebbles_foundation::{Color, CrossAxisAlignment, EdgeInsets, MainAxisSize, TextAlign, palette};
 #[cfg(feature = "image-view")]
 use pebbles_render::ImageFit;
-use pebbles_render::{Border, BorderRadius, BoxDecoration, Cursor, lucide};
+use pebbles_render::{Border, BorderRadius, BoxDecoration, Cursor, tabler};
 
 use pebbles_core::widget::{AnyWidget, IntoWidget};
 use pebbles_core::{children, component_props};
@@ -122,9 +122,9 @@ pub(crate) fn render_copy(p: &CopyProps) -> AnyWidget {
     pebbles_core::create_cleanup(move || pebbles_core::clear_timeout(id));
     let code = p.code.clone();
     let (ic, col) = if is_copied {
-        (lucide::CLIPBOARD_CHECK, palette::emerald::S500)
+        (tabler::CLIPBOARD_CHECK, palette::emerald::S500)
     } else {
-        (lucide::COPY, p.color)
+        (tabler::COPY, p.color)
     };
     gesture_detector(
         pebbles_widgets::components::icon(ic)
@@ -359,9 +359,9 @@ pub(crate) fn render_block(b: &Block, cx: &Cx) -> AnyWidget {
                         let (bound, on_task) = (cx.bound, cx.on_task.clone());
                         gesture_detector(
                             pebbles_widgets::components::icon(if checked {
-                                lucide::SQUARE_CHECK
+                                tabler::SQUARE_CHECK
                             } else {
-                                lucide::SQUARE
+                                tabler::SQUARE
                             })
                             .size(15.0)
                             .color(if checked {
@@ -561,11 +561,11 @@ pub(crate) fn render_callout(kind: CalloutKind, body: &[Block], cx: &Cx) -> AnyW
         CalloutKind::Caution => ("Caution", palette::rose::S500),
     };
     let ic = match kind {
-        CalloutKind::Note => lucide::INFO,
-        CalloutKind::Tip => lucide::LIGHTBULB,
-        CalloutKind::Important => lucide::CIRCLE_ALERT,
-        CalloutKind::Warning => lucide::TRIANGLE_ALERT,
-        CalloutKind::Caution => lucide::OCTAGON_ALERT,
+        CalloutKind::Note => tabler::INFO_CIRCLE,
+        CalloutKind::Tip => tabler::BULB,
+        CalloutKind::Important => tabler::ALERT_CIRCLE,
+        CalloutKind::Warning => tabler::ALERT_TRIANGLE,
+        CalloutKind::Caution => tabler::ALERT_OCTAGON,
     };
     let s = &cx.style;
     let bg = mix(theme().colors.background, accent, 0.10);
@@ -616,9 +616,9 @@ pub(crate) fn render_details(p: &DetailsProps) -> AnyWidget {
     let cx = &p.cx;
     let s = &cx.style;
     let chevron = if is_open {
-        lucide::CHEVRON_DOWN
+        tabler::CHEVRON_DOWN
     } else {
-        lucide::CHEVRON_RIGHT
+        tabler::CHEVRON_RIGHT
     };
     let header = gesture_detector(
         row(children![
@@ -897,7 +897,7 @@ pub(crate) fn render_embed_ref(target: &str, cx: &Cx) -> AnyWidget {
         };
         let blocks = parse_blocks(&content);
         let header = row(children![
-            pebbles_widgets::components::icon(lucide::FILE_TEXT)
+            pebbles_widgets::components::icon(tabler::FILE_TEXT)
                 .size(f64::from(s.body_size * 0.85))
                 .color(s.quote_color),
             gap_w(6.0),
@@ -938,7 +938,7 @@ pub(crate) fn render_embed_ref(target: &str, cx: &Cx) -> AnyWidget {
         .map(|c| preview_snippet(&c))
         .unwrap_or_else(|| name.clone());
     let inner = row(children![
-        pebbles_widgets::components::icon(lucide::FILE_TEXT)
+        pebbles_widgets::components::icon(tabler::FILE_TEXT)
             .size(f64::from(s.body_size * 0.9))
             .color(s.link_color),
         gap_w(6.0),

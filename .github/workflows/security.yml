@@ -1,0 +1,117 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Daily at 02:00 UTC — catches newly published advisories without a push.
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+# Minimal default token scope; jobs that upload SARIF escalate themselves.
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  # ───────────────────────────────────────────────────────────────────────────
+  # cargo-audit — the RustSec advisory database. This is the SCA gate: it finds
+  # CVEs in our DEPENDENCY graph. It reads the committed Cargo.lock directly, so
+  # it needs neither the framework sibling nor a build. Needs no token or
+  # account, so it cannot silently stop running.
+  # ───────────────────────────────────────────────────────────────────────────
+  audit:
+    name: cargo-audit (RustSec)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: taiki-e/install-action@e67fa11c4b9316fa714ddf0abed07a0c3143b95b # v2.87.4
+        with:
+          tool: cargo-audit
+      # Fails on any VULNERABILITY affecting the locked graph. Deliberately not
+      # `--deny warnings`: unmaintained/yanked-crate policy belongs in deny.toml
+      # where it is reviewable in-tree, and a GUI dependency graph always has
+      # some unmaintained leaf — gating on that trains people to ignore the job.
+      - run: cargo audit
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # cargo-deny — the supply-chain policy gate, driven by deny.toml: advisories,
+  # license allow-list, duplicate/banned crates, and permitted source
+  # registries. Unlike audit, `cargo deny` runs `cargo metadata`, which must
+  # resolve the `../pebbles/crates/*` path dependencies — so the framework is
+  # cloned sibling-style (same layout as ci.yml), though nothing is built.
+  # Split into named checks so a failure says WHICH policy broke.
+  # ───────────────────────────────────────────────────────────────────────────
+  deny:
+    name: cargo-deny (${{ matrix.check }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        check: [advisories, bans, licenses, sources]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: pebbles-markdown
+      - name: Clone the Pebbles framework (sibling)
+        run: git clone --depth 1 https://github.com/pebbles-hq/pebbles pebbles
+      - uses: taiki-e/install-action@e67fa11c4b9316fa714ddf0abed07a0c3143b95b # v2.87.4
+        with:
+          tool: cargo-deny
+      - working-directory: pebbles-markdown
+        run: cargo deny check ${{ matrix.check }}
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Gitleaks — secrets/credentials committed anywhere in git HISTORY, not just
+  # the current snapshot. Uses the CLI directly (the v2 action requires an org
+  # license). Results land in Security → Code Scanning.
+  # ───────────────────────────────────────────────────────────────────────────
+  gitleaks:
+    name: Gitleaks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code (full history)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Install Gitleaks
+        run: |
+          VERSION="v8.24.3"
+          curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/${VERSION}/gitleaks_${VERSION#v}_linux_x64.tar.gz" \
+            | tar -xz gitleaks
+          sudo mv gitleaks /usr/local/bin/gitleaks
+
+      - name: Run Gitleaks
+        run: |
+          gitleaks detect \
+            --source . \
+            --redact \
+            --no-banner \
+            --exit-code 1 \
+            --report-format sarif \
+            --report-path gitleaks.sarif
+
+      - name: Ensure SARIF file exists
+        # Gitleaks writes no report when zero leaks are found, but
+        # upload-sarif requires the file — emit a valid empty one.
+        if: always()
+        run: |
+          [ -f gitleaks.sarif ] || cat <<'EOF' > gitleaks.sarif
+          {"version":"2.1.0","$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json","runs":[{"tool":{"driver":{"name":"Gitleaks","rules":[]}},"results":[]}]}
+          EOF
+
+      - name: Upload Gitleaks results to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4
+        if: always()
+        with:
+          sarif_file: gitleaks.sarif
+          category: gitleaks

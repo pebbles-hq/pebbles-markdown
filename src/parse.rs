@@ -829,7 +829,16 @@ pub(crate) fn is_safe_link(url: &str) -> bool {
     match u.find(':') {
         None => true,
         Some(colon) => {
-            let before = &u[..colon];
+            // Browsers strip ASCII control characters and whitespace before
+            // resolving a scheme, so `java\nscript:` normalizes to `javascript:`.
+            // Strip them from the scheme candidate BEFORE the allowlist check so
+            // an embedded newline/tab/space can't smuggle a disallowed scheme
+            // through the "not a scheme" escape hatch below.
+            let before: String = u[..colon]
+                .chars()
+                .filter(|c| !c.is_ascii_whitespace() && !c.is_ascii_control())
+                .collect();
+            let before = before.as_str();
             // A `/`, `#` or `?` before the colon means it's a path, not a scheme.
             if before.is_empty()
                 || before.contains(['/', '#', '?'])
