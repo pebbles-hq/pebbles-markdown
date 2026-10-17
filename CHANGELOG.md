@@ -6,6 +6,9 @@ follow [SemVer](https://semver.org).
 
 ## [Unreleased]
 
+### Changed — demo screenshots use the framework's offscreen renderer
+`SHOT=` now renders through `pebbles::shell::capture::OffscreenCapture`; the demo no longer depends on vello/wgpu directly.
+
 Completes the feature checklist through **§15** — CommonMark (§1–§2), GFM (§3),
 advanced markup (§4), code blocks (§5), Obsidian PKM (§6), rendering & layout
 (§7), theming (§8), interaction (§9), editor (§10), performance (§11),

@@ -11,8 +11,3 @@ publish = false
 pebbles = { path = "../../../pebbles/crates/pebbles" }
 pebbles-markdown = { path = "../.." }
 
-# Headless render (SHOT=<w>:<h>:<out.rgba>) — rasterize via vello_hybrid, no display.
-vello = { version = "0.10", default-features = true }
-vello_hybrid = "0.2"
-wgpu = "29"
-pollster = "1"

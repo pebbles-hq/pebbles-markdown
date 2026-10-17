@@ -13,6 +13,7 @@
 //! Pebbles' public API plus this crate — exactly what any app (or another widget
 //! package) has to work with.
 
+#[cfg(not(target_family = "wasm"))]
 mod capture;
 
 use std::rc::Rc;
@@ -327,8 +328,11 @@ fn app() -> AnyWidget {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     Theme::light().make_current();
     // Headless screenshot path (SHOT=<w>:<h>:<out.rgba>) — no window, for docs/CI.
-    if let Ok(spec) = std::env::var("SHOT") {
-        return capture::shot(&spec, app, theme().colors.background);
+    #[cfg(not(target_family = "wasm"))]
+    {
+        if let Ok(spec) = std::env::var("SHOT") {
+            return capture::shot(&spec, app, theme().colors.background);
+        }
     }
     App::new(component(app))
         .title("pebbles-markdown — showcase")
