@@ -16,7 +16,11 @@ categories = ["gui"]
 readme = "README.md"
 
 [features]
-default = []
+# Transitional render-backend forwarding (pebbles wgpu migration). Removed when the
+# framework flips its default to wgpu (Phase 6, K24).
+default = ["vello-hybrid"]
+vello-hybrid = ["pebbles-core/vello-hybrid", "pebbles-render/vello-hybrid", "pebbles-widgets/vello-hybrid"]
+wgpu = ["pebbles-core/wgpu", "pebbles-render/wgpu", "pebbles-widgets/wgpu"]
 # Render inline images through Pebbles' ImageView (pulls the image codecs +,
 # for network URLs, a blocking HTTP client). Without it, images show alt text.
 image-view = ["pebbles-widgets/image-view"]
@@ -31,10 +35,10 @@ image-view = ["pebbles-widgets/image-view"]
 #   pebbles-render    = { git = "https://github.com/pebbles-hq/pebbles" }
 #   pebbles-foundation = { git = "https://github.com/pebbles-hq/pebbles" }
 [dependencies]
-pebbles-core = { path = "../pebbles/crates/pebbles-core" }
-pebbles-render = { path = "../pebbles/crates/pebbles-render" }
+pebbles-core = { path = "../pebbles/crates/pebbles-core", default-features = false }
+pebbles-render = { path = "../pebbles/crates/pebbles-render", default-features = false }
 pebbles-foundation = { path = "../pebbles/crates/pebbles-foundation" }
-pebbles-widgets = { path = "../pebbles/crates/pebbles-widgets" }
+pebbles-widgets = { path = "../pebbles/crates/pebbles-widgets", default-features = false }
 pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
 
 # The runnable showcase lives in its own workspace member (`examples/demo`) so it

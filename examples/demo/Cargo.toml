@@ -8,6 +8,10 @@ publish = false
 [dependencies]
 # Path deps for local side-by-side development (clone `pebbles` as a sibling of
 # `pebbles-markdown`). Mirrors the main crate's dependency posture.
-pebbles = { path = "../../../pebbles/crates/pebbles" }
-pebbles-markdown = { path = "../.." }
+pebbles = { path = "../../../pebbles/crates/pebbles", default-features = false }
+pebbles-markdown = { path = "../..", default-features = false }
 
+[features]
+default = ["vello-hybrid"]
+vello-hybrid = ["pebbles/vello-hybrid", "pebbles-markdown/vello-hybrid"]
+wgpu = ["pebbles/wgpu", "pebbles-markdown/wgpu"]
