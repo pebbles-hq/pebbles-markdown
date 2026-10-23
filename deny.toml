@@ -2,7 +2,7 @@
 # Run locally with `cargo deny check`; CI runs it on every push.
 #
 # This crate depends on the Pebbles framework (widgets/core/render/foundation),
-# so its graph inherits the framework's GPU/windowing stack (vello ↔ wgpu ↔
+# so its graph inherits the framework's GPU/windowing stack (wgpu ↔
 # winit ↔ muda) plus pulldown-cmark and, under the `image-view` feature, the
 # image codecs + a blocking HTTP client. The policy below mirrors `pebbles`.
 

@@ -55,9 +55,6 @@ jobs:
         working-directory: pebbles-markdown
         run: cargo test --workspace --all-features
 
-      - name: Test (wgpu backend — transitional, delete at Phase 6)
-        working-directory: pebbles-markdown
-        run: cargo test --workspace --no-default-features --features wgpu,image-view
 
       - name: Docs
         working-directory: pebbles-markdown

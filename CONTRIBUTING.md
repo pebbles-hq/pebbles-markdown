@@ -9,7 +9,7 @@ concept so you can find things by name and land changes with confidence.
 
 You need a recent stable Rust (edition 2024; `rust-version = 1.90`). The crate depends on
 `pebbles` (by git for external consumers, or by path for side-by-side development), so the first
-build fetches and compiles the framework (and its `wgpu`/`vello` stack) — expect a few minutes
+build fetches and compiles the framework (and its `wgpu` stack) — expect a few minutes
 the first time, fast after that.
 
 ```sh
