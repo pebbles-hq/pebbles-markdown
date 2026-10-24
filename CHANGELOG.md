@@ -7,12 +7,12 @@ follow [SemVer](https://semver.org).
 ## [Unreleased]
 
 ### Changed — the framework renders with wgpu only
-Requires pebbles ≥ `2a3a995`, which removed the Vello Hybrid backend and the Parley text stack.
-The `vello-hybrid` / `wgpu` backend features of this crate (and its demo) are gone: depend on
+Requires pebbles ≥ `2a3a995`, which made wgpu the only renderer and cosmic-text the only text stack.
+The renderer-selection features of this crate (and its demo) are gone: depend on
 it with default features. Nothing else changes for users.
 
 ### Changed — demo screenshots use the framework's offscreen renderer
-`SHOT=` now renders through `pebbles::shell::capture::OffscreenCapture`; the demo no longer depends on vello/wgpu directly.
+`SHOT=` now renders through `pebbles::shell::capture::OffscreenCapture`; the demo no longer depends on a renderer directly.
 
 Completes the feature checklist through **§15** — CommonMark (§1–§2), GFM (§3),
 advanced markup (§4), code blocks (§5), Obsidian PKM (§6), rendering & layout
@@ -51,7 +51,7 @@ Remaining items are documented framework blocks or reasoned scope boundaries.
   in `pebbles-widgets` — which hit-tests the paragraph's laid-out link boxes.
 - **Selectable text** (`Markdown::selectable()`): drag to select rendered text,
   copied to the clipboard on release. Backed by **new framework support** in
-  `RenderParagraph` (selection painting via parley `Selection` + point→byte
+  `RenderParagraph` (selection painting via the text layout's selection + point→byte
   hit-testing published through `text_edit`) and `RichText::selectable()` /
   `on_selection`. **Cross-block selection**: a drag — and the copy on release —
   now spans **across** paragraphs/blocks (a document-wide `SelectionGroup` maps a
