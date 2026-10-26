@@ -9,7 +9,9 @@ follow [SemVer](https://semver.org).
 ### Changed — the framework renders with wgpu only
 Requires pebbles ≥ `2a3a995`, which made wgpu the only renderer and cosmic-text the only text stack.
 The renderer-selection features of this crate (and its demo) are gone: depend on
-it with default features. Nothing else changes for users.
+it with default features. Nothing else changes for users; the demo capture uses the public offscreen API.
+
+**Migration:** none for users of default features.
 
 ### Changed — demo screenshots use the framework's offscreen renderer
 `SHOT=` now renders through `pebbles::shell::capture::OffscreenCapture`; the demo no longer depends on a renderer directly.
