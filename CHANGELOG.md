@@ -7,11 +7,16 @@ follow [SemVer](https://semver.org).
 ## [Unreleased]
 
 ### Changed — the framework renders with wgpu only
-Requires pebbles ≥ `2a3a995`, which made wgpu the only renderer and cosmic-text the only text stack.
+Requires pebbles ≥ `5a9fdbd`, which made wgpu the only renderer and cosmic-text the only text stack.
 The renderer-selection features of this crate (and its demo) are gone: depend on
 it with default features. Nothing else changes for users; the demo capture uses the public offscreen API.
 
 **Migration:** none for users of default features.
+
+### Changed — demo follows the system light/dark setting
+The demo no longer pins `Theme::light()`: it starts in the framework's default
+`ThemeMode::System` and has a Light/Dark toggle (`toggle_theme`). `SHOT=` captures
+stay light (`set_theme_mode(ThemeMode::Light)`) so docs screenshots are stable.
 
 ### Changed — demo screenshots use the framework's offscreen renderer
 `SHOT=` now renders through `pebbles::shell::capture::OffscreenCapture`; the demo no longer depends on a renderer directly.

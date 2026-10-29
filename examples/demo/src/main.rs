@@ -271,6 +271,13 @@ fn app() -> AnyWidget {
                     mode_seg("Edit", MarkdownMode::Edit),
                     gap_w(6.0),
                     mode_seg("Split", MarkdownMode::Split),
+                    gap_w(12.0),
+                    // Follows the OS light/dark setting (ThemeMode::System) until
+                    // toggled; every colour below comes from the live theme.
+                    button(if theme().dark { "Light" } else { "Dark" })
+                        .size(ButtonSize::Sm)
+                        .variant(ButtonVariant::Outline)
+                        .on_pressed(toggle_theme),
                 ])
                 .cross_axis_alignment(CrossAxisAlignment::Center),
                 gap_h(10.0),
@@ -326,11 +333,13 @@ fn app() -> AnyWidget {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    Theme::light().make_current();
     // Headless screenshot path (SHOT=<w>:<h>:<out.rgba>) — no window, for docs/CI.
+    // Pinned to light so the docs shots are deterministic; the window follows the
+    // system light/dark setting (the default `ThemeMode::System`).
     #[cfg(not(target_family = "wasm"))]
     {
         if let Ok(spec) = std::env::var("SHOT") {
+            set_theme_mode(ThemeMode::Light);
             return capture::shot(&spec, app, theme().colors.background);
         }
     }
