@@ -7,7 +7,7 @@ follow [SemVer](https://semver.org).
 ## [Unreleased]
 
 ### Changed — the framework renders with wgpu only
-Requires pebbles ≥ `5a9fdbd`, which made wgpu the only renderer and cosmic-text the only text stack.
+Requires pebbles ≥ `5a9fdbd` (wgpu is the only renderer and cosmic-text the only text stack).
 The renderer-selection features of this crate (and its demo) are gone: depend on
 it with default features. Nothing else changes for users; the demo capture uses the public offscreen API.
 
