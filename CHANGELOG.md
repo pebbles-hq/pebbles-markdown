@@ -17,6 +17,9 @@ it with default features. Nothing else changes for users; the demo capture uses 
 The demo no longer pins `Theme::light()`: it starts in the framework's default
 `ThemeMode::System` and has a Light/Dark toggle (`toggle_theme`). `SHOT=` captures
 stay light (`set_theme_mode(ThemeMode::Light)`) so docs screenshots are stable.
+The demo root paints `theme().colors.background`, so a live switch repaints the whole
+window, and `SHOT=` now calls the framework's `capture::capture_rgba` instead of a
+hand-rolled offscreen loop (settled frame, system fonts — same as the app).
 
 ### Changed — demo screenshots use the framework's offscreen renderer
 `SHOT=` now renders through `pebbles::shell::capture::OffscreenCapture`; the demo no longer depends on a renderer directly.

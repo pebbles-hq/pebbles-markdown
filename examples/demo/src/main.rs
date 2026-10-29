@@ -258,7 +258,10 @@ fn app() -> AnyWidget {
         .into_widget()
     };
 
+    // The root paints the theme background so the window follows light/dark live
+    // (the window's own clear colour is fixed at startup).
     container()
+        .color(theme().colors.background)
         .padding(EdgeInsets::all(16.0))
         .child(
             column(children![
