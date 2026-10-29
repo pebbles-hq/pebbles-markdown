@@ -16,7 +16,6 @@ categories = ["gui"]
 readme = "README.md"
 
 [features]
-default = []
 # Render inline images through Pebbles' ImageView (pulls the image codecs +,
 # for network URLs, a blocking HTTP client). Without it, images show alt text.
 image-view = ["pebbles-widgets/image-view"]
@@ -42,7 +41,7 @@ pulldown-cmark = { version = "0.13", default-features = false, features = ["html
 # to the library's dependency graph. Run it with `cargo run -p demo`.
 
 # Dev builds keep THIS crate at opt-level 0 (fast incremental compiles) but
-# optimize every dependency — the framework, wgpu/vello (GPU), parley/swash (text
+# optimize every dependency — the framework, wgpu (GPU), cosmic-text/swash (text
 # shaping + rasterization) — at opt-level 2. Without this, `cargo run -p demo`
 # and `cargo test` shape/paint text unoptimized and lag badly on real documents.
 [profile.dev]

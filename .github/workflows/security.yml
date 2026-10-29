@@ -29,7 +29,13 @@ jobs:
     name: cargo-audit (RustSec)
     runs-on: ubuntu-latest
     steps:
+      # No committed lockfile: cargo-audit resolves one, which needs the framework next to
+      # this repo for the `../pebbles/crates/*` path dependencies (as the deny job does).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: pebbles-markdown
+      - name: Clone the Pebbles framework (sibling)
+        run: git clone --depth 1 https://github.com/pebbles-hq/pebbles pebbles
       - uses: taiki-e/install-action@e67fa11c4b9316fa714ddf0abed07a0c3143b95b # v2.87.4
         with:
           tool: cargo-audit
@@ -37,7 +43,8 @@ jobs:
       # `--deny warnings`: unmaintained/yanked-crate policy belongs in deny.toml
       # where it is reviewable in-tree, and a GUI dependency graph always has
       # some unmaintained leaf — gating on that trains people to ignore the job.
-      - run: cargo audit
+      - working-directory: pebbles-markdown
+        run: cargo audit
 
   # ───────────────────────────────────────────────────────────────────────────
   # cargo-deny — the supply-chain policy gate, driven by deny.toml: advisories,

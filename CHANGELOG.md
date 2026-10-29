@@ -6,8 +6,23 @@ follow [SemVer](https://semver.org).
 
 ## [Unreleased]
 
+### Changed — the framework renders with wgpu only
+Requires pebbles ≥ `5a9fdbd` (wgpu is the only renderer and cosmic-text the only text stack).
+The renderer-selection features of this crate (and its demo) are gone: depend on
+it with default features. Nothing else changes for users; the demo capture uses the public offscreen API.
+
+**Migration:** none for users of default features.
+
+### Changed — demo follows the system light/dark setting
+The demo no longer pins `Theme::light()`: it starts in the framework's default
+`ThemeMode::System` and has a Light/Dark toggle (`toggle_theme`). `SHOT=` captures
+stay light (`set_theme_mode(ThemeMode::Light)`) so docs screenshots are stable.
+The demo root paints `theme().colors.background`, so a live switch repaints the whole
+window, and `SHOT=` now calls the framework's `capture::capture_rgba` instead of a
+hand-rolled offscreen loop (settled frame, system fonts — same as the app).
+
 ### Changed — demo screenshots use the framework's offscreen renderer
-`SHOT=` now renders through `pebbles::shell::capture::OffscreenCapture`; the demo no longer depends on vello/wgpu directly.
+`SHOT=` now renders through `pebbles::shell::capture::OffscreenCapture`; the demo no longer depends on a renderer directly.
 
 Completes the feature checklist through **§15** — CommonMark (§1–§2), GFM (§3),
 advanced markup (§4), code blocks (§5), Obsidian PKM (§6), rendering & layout
@@ -46,7 +61,7 @@ Remaining items are documented framework blocks or reasoned scope boundaries.
   in `pebbles-widgets` — which hit-tests the paragraph's laid-out link boxes.
 - **Selectable text** (`Markdown::selectable()`): drag to select rendered text,
   copied to the clipboard on release. Backed by **new framework support** in
-  `RenderParagraph` (selection painting via parley `Selection` + point→byte
+  `RenderParagraph` (selection painting via the text layout's selection + point→byte
   hit-testing published through `text_edit`) and `RichText::selectable()` /
   `on_selection`. **Cross-block selection**: a drag — and the copy on release —
   now spans **across** paragraphs/blocks (a document-wide `SelectionGroup` maps a
